@@ -1,12 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
-public class ProgressaoHistoria : MonoBehaviour
+public class Teste : MonoBehaviour
 {
     private int perguntas = 1;
-
+    
     private TabeladeAfinidades tabelaAfinidades;
     private ControleDialogos controleDialogos;
     private AtivarDesativarTexto ativarDesativarTexto;
@@ -23,9 +22,11 @@ public class ProgressaoHistoria : MonoBehaviour
     public Sprite Disha;
     public Sprite Chefe;
 
+    private string nomeDoPersonagemPrincipal;
+
     private void Start()
     {
-        
+        nomeDoPersonagemPrincipal = PlayerPrefs.GetString("nomeDoJogador");
 
         tabelaAfinidades = FindObjectOfType<TabeladeAfinidades>();
         controleDialogos = FindObjectOfType<ControleDialogos>();
@@ -80,9 +81,12 @@ public class ProgressaoHistoria : MonoBehaviour
                                 controleDialogos.PularTexto();
                                 controleDialogos.BotaoDePular.SetActive(true);
 
-                                Sprite[] sprites = { Ran, Hanna, Akira, maya};
-                                string[] stringsTextos = { "Espero que sim, mesmo…", "Pelo menos o atraso deve ter valido a pena para você, queridinho(a) da mamãe e do Papai.", "É uma sensação muito boa, não é? Desobedecer, amo (ele dá um riso).", "Podemos, por favor, ir?! às horas estão passando, não podemos perder muito tempo aqui." };
-                                string[] stringsNomes = { "Ran", "Hanna", "Akira", "Maya"};
+                                Sprite[] sprites = { Ran, Hanna, Akira, maya };
+                                string[] stringsTextos = { "Surpresa seria se eles dormissem antes de você.",
+                                    "Fala sério, seria melhor se você mentisse(revira os olhos), como que você consegue dormir, em um dia tão crucial?! Você era para sair 2 horas atrás, sabia? Está atrasado.",
+                                    $"{nomeDoPersonagemPrincipal} incrível que logo você acordou com a nossa ligação, você dorme que nem uma pedra.",
+                                    "Gente, podemos deixar essa discussão à caminho do local? Não podemos perder mais tempo." };
+                                string[] stringsNomes = { "Ran", "Hanna", "Akira", "Maya" };
                                 int sequencia = stringsTextos.Length;
 
                                 controleDialogos.PosPerguntas(sprites, stringsTextos, stringsNomes, sequencia, true);
@@ -101,6 +105,16 @@ public class ProgressaoHistoria : MonoBehaviour
 
                                 controleDialogos.PularTexto();
                                 controleDialogos.BotaoDePular.SetActive(true);
+
+                                Sprite[] sprites = { Ran, Hanna, Akira, maya };
+                                string[] stringsTextos = { "Espero que sim, mesmo…", 
+                                    "Pelo menos o atraso deve ter valido a pena para você, queridinho(a) da mamãe e do Papai.", 
+                                    "É uma sensação muito boa, não é? Desobedecer, amo (ele dá um riso).", 
+                                    "Podemos, por favor, ir?! às horas estão passando, não podemos perder muito tempo aqui." };
+                                string[] stringsNomes = { "Ran", "Hanna", "Akira", "Maya" };
+                                int sequencia = stringsTextos.Length;
+
+                                controleDialogos.PosPerguntas(sprites, stringsTextos, stringsNomes, sequencia, true);
                                 break;
                             }
                     }

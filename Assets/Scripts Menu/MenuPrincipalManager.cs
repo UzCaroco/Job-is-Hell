@@ -1,7 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class NewBehaviourScript : MonoBehaviour
 {
@@ -9,8 +13,12 @@ public class NewBehaviourScript : MonoBehaviour
 
     [SerializeField] private GameObject MenuInicial;
     [SerializeField] private GameObject MenuOpcoes;
+    [SerializeField] private GameObject MenuNome;
+    [SerializeField] private GameObject TextoInicial;
+    [SerializeField] private GameObject BackgroundPainel;
+    [SerializeField] private TMP_InputField inputField;
 
-
+    private ControleDialogos controleDialogos;
 
     public void Jogar()
     {
@@ -70,6 +78,8 @@ public class NewBehaviourScript : MonoBehaviour
 
     private void Start()
     {
+        controleDialogos = FindObjectOfType<ControleDialogos>();
+
         //Se a tela deve começar escurecida, define a opacidade para 1 (escuro). Caso contrário, define para 0 (visível)
         if (comecarEscurecido)
         {
@@ -96,21 +106,27 @@ public class NewBehaviourScript : MonoBehaviour
         if (direcao == 0 && cliqueBotaoJogar)
         {
             cliqueBotaoJogar = false;
+
             //Se a tela está totalmente escura, começa a clarear (direcao = 1)
-            if (opacidade >= 1f)
-            {
-                opacidade = 1f;
-                tempo = 0f;
-                direcao = 1;
-            }
+            //if (opacidade >= 1f)
+            //{
+            //    opacidade = 1f;
+            //    tempo = 0f;
+            //    direcao = 1;
+            //}
+
             //Se a tela está totalmente visível, começa a escurecer (direcao = -1)
-            else
+            if (opacidade <= 0f)
             {
                 opacidade = 0f;
                 tempo = 1f;
                 direcao = -1;
             }
         }
+
+        PularTexto();
+
+
     }
 
     private void OnGUI()
@@ -143,8 +159,65 @@ public class NewBehaviourScript : MonoBehaviour
 
             if (opacidade >= 1f && direcao == 0)
             {
-                SceneManager.LoadScene(1);
+                opacidade = 0f;
+                BackgroundPainel.GetComponent<Image>().sprite = null;
+                textura.SetPixel(0, 0, new Color(corFade.r, corFade.g, corFade.b, opacidade));
+                textura.Apply();
+
+                jogoIniciado = true;
+
+                MenuInicial.SetActive(false);
+                MenuNome.SetActive(true);
             }
+        }
+    }
+
+    public void ButtonFinish()
+    {
+        // No script da primeira cena
+        string nome = inputField.text;
+        PlayerPrefs.SetString("nomeDoJogador", nome);
+
+        MenuNome.SetActive(false);
+        TextoInicial.SetActive(true);
+        StartCoroutine(AnimacaoTexto());
+    }
+
+
+    [SerializeField] private TextMeshProUGUI conteudoTexto;
+    [SerializeField] private float velocidadeTexto;
+    public KeyCode tecla = KeyCode.Space;
+    private bool textoCompleto = false;
+    private bool jogoIniciado = false;
+    private string texto = "I woke up to my cell phone ringing and vibrating at the head of the bed...";
+    IEnumerator AnimacaoTexto()
+    {
+        textoCompleto = false;
+        conteudoTexto.text = "";
+        foreach (char letras in texto.ToCharArray())
+        {
+            conteudoTexto.text += letras;
+            yield return new WaitForSeconds(velocidadeTexto);
+        }
+        textoCompleto = true;
+    }
+
+    public void PularTexto()
+    {
+        if (!textoCompleto && Input.GetKeyDown(tecla) && jogoIniciado)
+        {
+            StopAllCoroutines();
+            conteudoTexto.text = texto;
+            textoCompleto = true;
+        }
+        //Se todos os textos foram passados
+        else if(textoCompleto && Input.GetKeyDown(tecla) && jogoIniciado)
+        {
+            opacidade = 1f;
+            textura.SetPixel(0, 0, new Color(corFade.r, corFade.g, corFade.b, opacidade));
+            textura.Apply();
+
+            SceneManager.LoadScene(1);
         }
     }
 }

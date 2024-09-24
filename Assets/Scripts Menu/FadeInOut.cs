@@ -12,10 +12,12 @@ public class FadeInOut : MonoBehaviour
         new Keyframe(0.5f, 0.5f, -1.5f, -1.5f), new Keyframe(1, 0));
     public bool comecarEscurecido = false;
 
-    private float opacidade = 0f;
+    public float opacidade = 0f;
     private Texture2D textura;
     private int direcao = 0;
     private float tempo = 0f;
+
+    ControleDialogos scriptControleDialogos;
 
     private void Start()
     {
@@ -23,25 +25,23 @@ public class FadeInOut : MonoBehaviour
         textura = new Texture2D(1, 1);
         textura.SetPixel(0, 0, new Color(corFade.r, corFade.g, corFade.b, opacidade));
         textura.Apply();
+
+        scriptControleDialogos = GetComponent<ControleDialogos>();
     }
 
     private void Update()
     {
-        if (direcao == 0 && Input.GetKeyDown(tecla))
+        if (direcao == 0)
         {
-            if (opacidade >= 1f) // Totalmente escurecido
+            if (opacidade >= 1f)
             {
                 opacidade = 1f;
                 tempo = 0f;
                 direcao = 1;
             }
-            else // Totalmente visível
-            {
-                opacidade = 0f;
-                tempo = 1f;
-                direcao = -1;
-            }
         }
+
+        
     }
 
     public void OnGUI()
@@ -53,7 +53,15 @@ public class FadeInOut : MonoBehaviour
             opacidade = curva.Evaluate(tempo);
             textura.SetPixel(0, 0, new Color(corFade.r, corFade.g, corFade.b, opacidade));
             textura.Apply();
-            if (opacidade <= 0f || opacidade >= 1f) direcao = 0;
+            if (opacidade <= 0f || opacidade >= 1f)
+            {
+                direcao = 0;
+            }
+
+            if (opacidade <= 0)
+            {
+                scriptControleDialogos.dialogoInicial = true;
+            }
         }
     }
 

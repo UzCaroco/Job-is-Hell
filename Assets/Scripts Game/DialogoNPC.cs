@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,11 +12,11 @@ public class DialogoNPC : MonoBehaviour
     [SerializeField] private string nomePersonagem;
 
     private ControleDialogos scriptControleDialogos;
-    private Collider2D colisor;
-    private bool permiteInteracaoBOOL;
+    //private Collider2D colisor;
+    //private bool permiteInteracaoBOOL;
     private bool dialogoIniciado;
 
-    [SerializeField] private float raioColisao;
+    //[SerializeField] private float raioColisao;
     [SerializeField] private LayerMask layerMask;
 
     private void Start()
@@ -26,40 +27,46 @@ public class DialogoNPC : MonoBehaviour
     }
     private void FixedUpdate()
     {
-        InteracaoComNPC();
+        //InteracaoComNPC();
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E) && permiteInteracaoBOOL && !dialogoIniciado)
+        //if (Input.GetKeyDown(KeyCode.E) && permiteInteracaoBOOL && !dialogoIniciado)
+        //{
+        //    scriptControleDialogos.Personagem(spriteNPC, textoDialogo, nomePersonagem, this);
+        //    dialogoIniciado = true;
+        //}
+
+        if (Input.GetKeyDown(KeyCode.E) && !dialogoIniciado)
         {
-            scriptControleDialogos.Personagem(spriteNPC, textoDialogo, nomePersonagem, this);
+            scriptControleDialogos.Personagem(spriteNPC, textoDialogo, nomePersonagem);
             dialogoIniciado = true;
         }
     }
 
-    public void InteracaoComNPC()
-    {
-        colisor = Physics2D.OverlapCircle(transform.position, raioColisao, layerMask);
+    //public void InteracaoComNPC()
+    //{
+    //    colisor = Physics2D.OverlapCircle(transform.position, raioColisao, layerMask);
 
         //Se o objeto estiver dentro da área de interação
-        if (colisor != null )
-        {
-            permiteInteracaoBOOL = true;
-        }
-        else
-        {
-            permiteInteracaoBOOL = false;
-        }
-    }
+    //    if (colisor != null )
+    //    {
+    //        permiteInteracaoBOOL = true;
+    //    }
+    //    else
+    //    {
+    //        permiteInteracaoBOOL = false;
+    //    }
+    //}
 
     public void FimDoDialogo(bool resposta)
     {
         dialogoIniciado = resposta;
     }
 
-    private void OnDrawGizmosSelected()
-    {
-        Gizmos.DrawWireSphere(transform.position, raioColisao);
-    }
+    //private void OnDrawGizmosSelected()
+    //{
+    //    Gizmos.DrawWireSphere(transform.position, raioColisao);
+    //}
 }
